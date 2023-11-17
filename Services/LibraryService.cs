@@ -31,6 +31,8 @@ namespace Services
                 builder.Services.AddDbContext<LibraryContext>(options => options.UseSqlServer(connectionString),ServiceLifetime.Scoped); 
 
                 builder.Services.AddTransient(sp => new BookController(libraryFactory.bookRepo));
+                builder.Services.AddTransient(sp => new MemberController(libraryFactory.memberRepo));
+                builder.Services.AddTransient(sp => new BorrowTransactionController(libraryFactory.borrowTransactionRepo));
 
                 WebApplication app = builder.Build();
                 app.MapControllers();

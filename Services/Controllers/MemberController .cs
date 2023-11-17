@@ -16,7 +16,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpGet]
-        [Route("")]
+        [Route("members")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<Member>))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -39,7 +39,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpGet]
-        [Route("id")]
+        [Route("member/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Member))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,7 +67,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpPost]
-        [Route("")]
+        [Route("member")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PostMember([FromBody] Member Member, CancellationToken cancellationToken = new CancellationToken())
@@ -82,7 +82,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("member/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -108,7 +108,7 @@ namespace LibraryApp.Services.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("member/{id}")]
         public async Task<IActionResult> DeleteMember(string id, CancellationToken cancellationToken = new CancellationToken())
         {
             try

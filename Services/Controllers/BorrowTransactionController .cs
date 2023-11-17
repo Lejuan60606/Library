@@ -16,7 +16,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpGet]
-        [Route("")]
+        [Route("transactions")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BorrowTransaction>))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -39,7 +39,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpGet]
-        [Route("id")]
+        [Route("transaction/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BorrowTransaction))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -67,7 +67,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpPost]
-        [Route("")]
+        [Route("transaction")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> PostBorrowTransaction([FromBody] BorrowTransaction borrowTransaction, CancellationToken cancellationToken = new CancellationToken())
@@ -82,7 +82,7 @@ namespace LibraryApp.Services.Controllers
         }
 
         [HttpPut]
-        [Route("{id}")]
+        [Route("transaction/{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -108,7 +108,7 @@ namespace LibraryApp.Services.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("transaction/{id}")]
         public async Task<IActionResult> DeleteBorrowTransaction(string id, CancellationToken cancellationToken = new CancellationToken())
         {
             try
