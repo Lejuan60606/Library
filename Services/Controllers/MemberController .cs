@@ -22,7 +22,7 @@ namespace LibraryApp.Services.Controllers
         [HttpPost]
         public IActionResult PostMember([FromBody] Member Member)
         {
-            return CreatedAtAction(nameof(GetMemberById), new { id = Member.ID }, Member);
+            return CreatedAtAction(nameof(GetMemberById), new { id = Member.Id }, Member);
         }
 
         [HttpPut("{id}")]

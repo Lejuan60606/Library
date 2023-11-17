@@ -41,12 +41,12 @@ namespace LibraryApp.Repository
 
             modelBuilder.Entity<Member>(entity =>
             {
-                entity.HasKey(d => new { d.ID });
+                entity.HasKey(d => new { d.Id });
             });
 
             modelBuilder.Entity<BorrowTransaction>(entity =>
             {
-                entity.HasKey(d => new { d.ID });
+                entity.HasKey(d => new { d.Id });
             });
         }
     }

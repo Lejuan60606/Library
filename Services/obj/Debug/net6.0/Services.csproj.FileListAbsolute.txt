@@ -3,9 +3,6 @@ C:\Users\lejuan.hu\Documents\GitHub\Library\Services\obj\Debug\net6.0\Services.G
 C:\Users\lejuan.hu\Documents\GitHub\Library\Services\obj\Debug\net6.0\Services.AssemblyInfoInputs.cache
 C:\Users\lejuan.hu\Documents\GitHub\Library\Services\obj\Debug\net6.0\Services.AssemblyInfo.cs
 C:\Users\lejuan.hu\Documents\GitHub\Library\Services\obj\Debug\net6.0\Services.csproj.CoreCompileInputs.cache
-C:\Users\lejuan.hu\Documents\GitHub\Library\Services\bin\Debug\net6.0\Repository.deps.json
-C:\Users\lejuan.hu\Documents\GitHub\Library\Services\bin\Debug\net6.0\Repository.runtimeconfig.json
-C:\Users\lejuan.hu\Documents\GitHub\Library\Services\bin\Debug\net6.0\Repository.exe
 C:\Users\lejuan.hu\Documents\GitHub\Library\Services\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\lejuan.hu\Documents\GitHub\Library\Services\bin\Debug\net6.0\appsettings.json
 C:\Users\lejuan.hu\Documents\GitHub\Library\Services\bin\Debug\net6.0\Services.deps.json

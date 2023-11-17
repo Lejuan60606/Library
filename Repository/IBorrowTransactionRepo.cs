@@ -4,10 +4,10 @@ namespace LibraryApp.Repository
 {
     public interface IBorrowTransactionRepo
     {
-        Task<IList<BorrowTransaction>> GetAll();
-        Task<BorrowTransaction> GetById(string id);
-        Task<bool> Add(BorrowTransaction borrowTransaction);
-        Task<bool> Update(BorrowTransaction borrowTransaction);
-        Task<bool> Delete(string id);
+        Task<List<BorrowTransaction>> GetAll(CancellationToken cancellationToken);
+        Task<BorrowTransaction> GetById(string id, CancellationToken cancellationToken);
+        Task Add(BorrowTransaction borrowTransaction, CancellationToken cancellationToken);
+        Task Update(string id, BorrowTransaction borrowTransaction, CancellationToken cancellationToken);
+        Task Delete(BorrowTransaction borrowTransaction, CancellationToken cancellationToken);
     }
 }
