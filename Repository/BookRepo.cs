@@ -31,12 +31,12 @@ namespace LibraryApp.Repository
 
         public async Task<Book> GetById(string id, CancellationToken cancellationToken)
         {
-            return await _dbContext.Books.FirstOrDefaultAsync(book => book.ID == id, cancellationToken: cancellationToken);
+            return await _dbContext.Books.FirstOrDefaultAsync(book => book.Id == id, cancellationToken: cancellationToken);
         }
 
         public async Task Update(string id, Book book, CancellationToken cancellationToken)
         {
-            var existingBook = await _dbContext.Books.FirstOrDefaultAsync(b => b.ID == book.ID, cancellationToken: cancellationToken);
+            var existingBook = await _dbContext.Books.FirstOrDefaultAsync(b => b.Id == book.Id, cancellationToken: cancellationToken);
             if (existingBook != null)
             {
                 existingBook.Title = book.Title;

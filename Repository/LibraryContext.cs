@@ -15,12 +15,15 @@ namespace LibraryApp.Repository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var configuration = new ConfigurationBuilder().Build();
+            //var configuration = new ConfigurationBuilder().Build();
 
-            optionsBuilder.UseSqlServer(_connectionString, builder =>
-            {
-                builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-            });
+            //optionsBuilder.UseSqlServer(_connectionString, builder =>
+            //{
+            //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+            //});
+
+            new ConfigurationBuilder().Build();
+            optionsBuilder.UseSqlServer(_connectionString);
         }
 
         public virtual DbSet<Book> Books { get; set; }
@@ -33,7 +36,7 @@ namespace LibraryApp.Repository
 
             modelBuilder.Entity<Book>(entity =>
             {
-                entity.HasKey(d => new { d.ID });
+                entity.HasKey(d => new { d.Id });
             });
 
             modelBuilder.Entity<Member>(entity =>

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApp.Services.Controllers
 {  
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class BookController : ControllerBase
     {
@@ -25,6 +25,7 @@ namespace LibraryApp.Services.Controllers
             try
             {
                 List<Book> books = await _repo.GetAll(cancellationToken);
+                var sth = books;
                 if(books.Count > 0)
                 {
                     return Ok(books);
@@ -77,7 +78,7 @@ namespace LibraryApp.Services.Controllers
             }
              
             await _repo.Add(book, cancellationToken);
-            return CreatedAtAction(nameof(GetBookById), new { id = book.ID }, book);
+            return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, book);
         }
 
         [HttpPut]
