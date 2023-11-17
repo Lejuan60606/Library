@@ -1,5 +1,6 @@
 ﻿using LibraryApp.Repository.DataModel;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 
 namespace LibraryApp.Repository
 {
@@ -39,7 +40,10 @@ namespace LibraryApp.Repository
             var existingBorrowTransaction = await _dbContext.BorrowTransactions.FirstOrDefaultAsync(b => b.Id == borrowTransaction.Id, cancellationToken: cancellationToken);
             if (existingBorrowTransaction != null)
             {
-                
+                existingBorrowTransaction.BookID = borrowTransaction.BookID;
+                existingBorrowTransaction.MemberID = borrowTransaction.MemberID;
+                existingBorrowTransaction.BorrowDate = borrowTransaction.BorrowDate;
+                existingBorrowTransaction.ReturnDate = borrowTransaction.ReturnDate;
 
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
