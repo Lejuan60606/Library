@@ -1,6 +1,6 @@
-using LibraryApp.Repository;
-using LibraryApp.Repository.DataModel;
-using LibraryApp.Services.Controllers;
+using Repository;
+using Repository.DataModel;
+using Services.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;

@@ -1,8 +1,8 @@
-﻿using LibraryApp.Repository.DataModel;
+﻿using Repository.DataModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace LibraryApp.Repository
+namespace Repository
 {
     public class LibraryContext : DbContext
     {

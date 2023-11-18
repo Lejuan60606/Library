@@ -1,5 +1,5 @@
-﻿using LibraryApp.Repository;
-using LibraryApp.Services.Controllers;
+﻿using Repository;
+using Services.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

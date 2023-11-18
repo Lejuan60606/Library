@@ -1,6 +1,6 @@
-﻿using LibraryApp.Repository.DataModel;
+﻿using Repository.DataModel;
 
-namespace LibraryApp.Repository
+namespace Repository
 {
     public interface IBookRepo
     {

@@ -1,5 +1,5 @@
-using LibraryApp.Repository;
-using LibraryApp.Repository.DataModel;
+using Repository;
+using Repository.DataModel;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;

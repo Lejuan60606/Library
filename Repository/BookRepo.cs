@@ -1,7 +1,7 @@
-﻿using LibraryApp.Repository.DataModel;
+﻿using Repository.DataModel;
 using Microsoft.EntityFrameworkCore;
 
-namespace LibraryApp.Repository
+namespace Repository
 {
     public class BookRepo : IBookRepo
     {

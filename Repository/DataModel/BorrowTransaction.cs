@@ -1,4 +1,4 @@
-﻿namespace LibraryApp.Repository.DataModel
+﻿namespace Repository.DataModel
 {
     public class BorrowTransaction
     {

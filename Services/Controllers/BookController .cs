@@ -1,8 +1,8 @@
-﻿using LibraryApp.Repository;
-using LibraryApp.Repository.DataModel;
+﻿using Repository;
+using Repository.DataModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LibraryApp.Services.Controllers
+namespace Services.Controllers
 {  
     [Route("api/")]
     [ApiController]

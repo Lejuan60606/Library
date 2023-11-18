@@ -1,8 +1,8 @@
-﻿using LibraryApp.Repository.DataModel;
+﻿using Repository.DataModel;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Metrics;
 
-namespace LibraryApp.Repository
+namespace Repository
 {
     public class BorrowTransactionRepo : IBorrowTransactionRepo
     {
