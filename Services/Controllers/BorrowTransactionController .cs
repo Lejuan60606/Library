@@ -1,133 +1,91 @@
 ﻿using Repository;
 using Repository.DataModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
 namespace Services.Controllers
 {
-    [Route("api/")]
     [ApiController]
+    [Route("api/borrowtransactions")]
     public class BorrowTransactionController : ControllerBase
     {
-        private readonly IBorrowTransactionRepo _repo;
+        private readonly IBorrowTransactionRepo _transactionRepository;
 
-        public BorrowTransactionController(IBorrowTransactionRepo repo)
+        public BorrowTransactionController(IBorrowTransactionRepo transactionRepository)
         {
-            _repo = repo;
+            _transactionRepository = transactionRepository;
         }
 
         [HttpGet]
-        [Route("transactions")]
+        [Route("member/books/{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BorrowTransaction>))]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllBorrowTransactions(CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IActionResult> GetByMemberId(string memberId, CancellationToken cancellationToken = new CancellationToken())
         {
-            try
+            if (string.IsNullOrEmpty(memberId))
             {
-                List<BorrowTransaction> BorrowTransactions = await _repo.GetAll(cancellationToken);
-                var sth = BorrowTransactions;
-                if (BorrowTransactions.Count > 0)
-                {
-                    return Ok(BorrowTransactions);
-                }
-                return NoContent();
+                return BadRequest("Transaction data is null.");
             }
-            catch (Exception ex)
+
+            var transactions = await _transactionRepository.GetByMemberId(memberId, cancellationToken);
+            if (transactions == null || !transactions.Any())
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return NotFound();
             }
+
+            return Ok(transactions);
         }
 
-        [HttpGet]
-        [Route("transaction/{id}")]
+        [HttpPost]
+        [Route("member/borrow/{memberId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BorrowTransaction))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetBorrowTransactionById(string id, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IActionResult> BorrowBook(string memberId, [FromBody] Book book, CancellationToken cancellationToken = new CancellationToken())
         {
-            try
+            if(string.IsNullOrEmpty(memberId))
             {
-                if (string.IsNullOrEmpty(id))
-                {
-                    return BadRequest();
-                }
-
-                BorrowTransaction BorrowTransaction = await _repo.GetById(id, cancellationToken);
-                if (BorrowTransaction != null)
-                {
-                    return Ok(BorrowTransaction);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
-
-        [HttpPost]
-        [Route("transaction")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PostBorrowTransaction([FromBody] BorrowTransaction borrowTransaction, CancellationToken cancellationToken = new CancellationToken())
-        {
-            if (borrowTransaction == null)
-            {
-                return BadRequest("BorrowTransaction data is null.");
+                return BadRequest("Transaction data is null.");
             }
 
-            await _repo.Add(borrowTransaction, cancellationToken);
-            return CreatedAtAction(nameof(GetBorrowTransactionById), new { id = borrowTransaction.Id }, borrowTransaction);
+            Guid newId = Guid.NewGuid();
+            string uniqueIdString = newId.ToString();
+            BorrowTransaction transaction = new BorrowTransaction() { 
+                Id = uniqueIdString,
+                BookID = book.Id,
+                MemberID = memberId,
+                BorrowDate = DateTime.UtcNow
+            };
+            await _transactionRepository.BorrowBook(memberId, book, cancellationToken); //update book IsAvaliable status
+            return CreatedAtAction(nameof(GetByMemberId), new { memberId = transaction.MemberID }, transaction);
         }
 
         [HttpPut]
-        [Route("transaction/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [Route("member/return/{memberId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BorrowTransaction))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> PutBorrowTransaction(string id, [FromBody] BorrowTransaction borrowTransaction, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IActionResult> ReturnBook(string memberId, [FromBody] Book book, CancellationToken cancellationToken = new CancellationToken())
         {
-            try
+            if (string.IsNullOrEmpty(memberId))
             {
-                var existingBorrowTransaction = await _repo.GetById(id, cancellationToken);
-                if (existingBorrowTransaction == null)
-                {
-                    return NotFound();
-                }
-
-                await _repo.Update(id, borrowTransaction, cancellationToken);
-                return NoContent();
-
+                return BadRequest("member Id is null.");
             }
-            catch (Exception ex)
+
+            if(book == null)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest("Book is null");
             }
-        }
 
-        [HttpDelete("transaction/{id}")]
-        public async Task<IActionResult> DeleteBorrowTransaction(string id, CancellationToken cancellationToken = new CancellationToken())
-        {
-            try
-            {
-                var existingBorrowTransaction = await _repo.GetById(id, cancellationToken);
-                if (existingBorrowTransaction == null)
-                {
-                    return NotFound();
-                }
-
-                await _repo.Delete(existingBorrowTransaction, cancellationToken);
-                return NoContent();
-
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
+            //get the transaction ID, update the ReturnDate,update book Isavaliavle
+           var transaction = await _transactionRepository.ReturnBook(memberId, book, cancellationToken);
+            return Ok(transaction);
         }
     }
+
 
 }

@@ -1605,7 +1605,8 @@
           "Microsoft.EntityFrameworkCore": "7.0.8",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.8",
           "Repository": "1.0.0",
-          "Swashbuckle.AspNetCore": "6.2.3"
+          "Swashbuckle.AspNetCore": "6.2.3",
+          "System.Threading.Tasks": "4.3.0"
         },
         "compile": {
           "bin/placeholder/Services.dll": {}
