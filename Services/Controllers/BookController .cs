@@ -25,7 +25,6 @@ namespace LibraryApp.Services.Controllers
             try
             {
                 List<Book> books = await _repo.GetAll(cancellationToken);
-                var sth = books;
                 if(books.Count > 0)
                 {
                     return Ok(books);

@@ -11,30 +11,21 @@ namespace RepositoryTest
     public class BookRepositoryTests
     {
         private Mock<DbSet<Book>> _dbSetMock;
-        private Mock<LibraryContext> _contextMock;
-        private IQueryable<Book> bookList;
+        private Mock<LibraryContext> _contextMock;     
 
         [SetUp]
         public void Setup()
         {
             string connectionString = "string";
             _contextMock = new Mock<LibraryContext>(connectionString);
-            bookList = new List<Book>() { new Book()
-            {
-                Id = "id1",
-                Title = "t1",
-                Author = "a1",
-                PublicationYear = DateTime.UtcNow,
-            }
-        }.AsQueryable();
-
-            //IEnumerable<Book> testData = CreateDataForTest();
-            _dbSetMock = new Mock<DbSet<Book>>().SetData(bookList);
+            IEnumerable<Book> testData = CreateDataForTest();
+            _dbSetMock = new Mock<DbSet<Book>>().SetData(testData);
+            _dbSetMock = new Mock<DbSet<Book>>(); ;
             _contextMock.Setup(m => m.Books).Returns(_dbSetMock.Object);
         }
 
         [Test]
-        public async Task AddBookAsync_AddsBook()
+        public async Task AddsBook()
         {
             CancellationToken cancellationToken = new CancellationToken();
             var books = new List<Book>();
@@ -111,12 +102,32 @@ namespace RepositoryTest
         [Test]
         public async Task DeleteBookWithExistingId()
         {
-        }
+            CancellationToken cancellationToken = new CancellationToken();
+            var book = new Book()
+            {
+                Id = "id1",
+                Title = "ttt2",
+                Author = "aaa1",
+                PublicationYear = DateTime.UtcNow,
+            };
 
-        [Test]
-        public async Task DeleteBookWithNotExistingId()
-        {
+            var target = new BookRepo(_contextMock.Object);
+            await target.Delete(book, cancellationToken);
+            _contextMock.Verify(context => context.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         }      
+        
+        public IList<Book> CreateDataForTest()
+        {
+            var book = new Book()
+            {
+                Id = "id1",
+                Title = "ttt2",
+                Author = "aaa1",
+                PublicationYear = DateTime.UtcNow,
+            };
+
+            return new List<Book> { book };
+        }
     }
 
 }

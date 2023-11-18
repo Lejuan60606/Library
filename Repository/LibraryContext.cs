@@ -14,14 +14,7 @@ namespace LibraryApp.Repository
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //var configuration = new ConfigurationBuilder().Build();
-
-            //optionsBuilder.UseSqlServer(_connectionString, builder =>
-            //{
-            //    builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
-            //});
-
+        {          
             new ConfigurationBuilder().Build();
             optionsBuilder.UseSqlServer(_connectionString);
         }
