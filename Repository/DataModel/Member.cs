@@ -1,9 +1,9 @@
-﻿namespace LibraryApp.Repository.DataModel
+﻿namespace Repository.DataModel
 {
     public class Member
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public DateTime JoinedDate { get; set; }
+        public DateTime? JoinedDate { get; set; }
     }
 }

@@ -1,13 +1,11 @@
-﻿using LibraryApp.Repository.DataModel;
+﻿using Repository.DataModel;
 
-namespace LibraryApp.Repository
+namespace Repository
 {
     public interface IBorrowTransactionRepo
     {
-        Task<IList<BorrowTransaction>> GetAll();
-        Task<BorrowTransaction> GetById(string id);
-        Task<bool> Add(BorrowTransaction borrowTransaction);
-        Task<bool> Update(BorrowTransaction borrowTransaction);
-        Task<bool> Delete(string id);
+        Task<BorrowTransaction> ReturnBook(string memberId, Book book, CancellationToken cancellationToken);
+        Task<BorrowTransaction> BorrowBook(string memberId, Book book, CancellationToken cancellationToken);
+        Task<List<BorrowTransaction>> GetByMemberId(string memberId, CancellationToken cancellationToken);        
     }
 }

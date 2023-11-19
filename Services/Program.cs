@@ -1,25 +1,10 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿using Services;
 
-// Add services to the container.
+Console.WriteLine("Starting REST Apis - for library system");
+var srv = new LibraryService();
+srv.StartUp();
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Console.WriteLine("Stopping REST Apis - for librry system");
 
-var app = builder.Build();
+Console.ReadLine();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

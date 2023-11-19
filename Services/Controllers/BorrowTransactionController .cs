@@ -1,30 +1,85 @@
-﻿using LibraryApp.Repository.DataModel;
+﻿using Repository;
+using Repository.DataModel;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 
-namespace LibraryApp.Services.Controllers
+namespace Services.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/borrowtransactions")]
     public class BorrowTransactionController : ControllerBase
-    {       
-        [HttpGet("ByMember/{memberId}")]
-        public IActionResult GetBorrowTransactionsByMember(int memberId)
-        {          
-            return Ok();
-        }
-      
-        [HttpPost]
-        public IActionResult PostBorrowTransaction([FromBody] BorrowTransaction transaction)
-        {          
-            return CreatedAtAction("GetBorrowTransactionsByMember", new { memberId = transaction.MemberID }, transaction);
-        }
-      
-        [HttpPut("{id}")]
-        public IActionResult PutBorrowTransaction(int id, [FromBody] BorrowTransaction transaction)
-        {            
-            return NoContent();
-        }
-       
-    }
-}
+    {
+        private readonly IBorrowTransactionRepo _transactionRepository;
 
+        public BorrowTransactionController(IBorrowTransactionRepo transactionRepository)
+        {
+            _transactionRepository = transactionRepository;
+        }
+
+        [HttpGet]
+        [Route("member/books/{memberId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<BorrowTransaction>))]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetByMemberId(string memberId, CancellationToken cancellationToken = new CancellationToken())
+        {
+            if (string.IsNullOrEmpty(memberId))
+            {
+                return BadRequest("Transaction data is null.");
+            }
+
+            var transactions = await _transactionRepository.GetByMemberId(memberId, cancellationToken);
+            if (transactions == null || !transactions.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(transactions);
+        }
+
+        [HttpPost]
+        [Route("member/borrow/{memberId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BorrowTransaction))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> BorrowBook(string memberId, [FromBody] Book book, CancellationToken cancellationToken = new CancellationToken())
+        {
+            if(string.IsNullOrEmpty(memberId))
+            {
+                return BadRequest("Transaction data is null.");
+            }          
+            
+            var transaction =  await _transactionRepository.BorrowBook(memberId, book, cancellationToken); 
+            return CreatedAtAction(nameof(GetByMemberId), new { memberId = transaction.MemberID }, transaction);
+        }
+
+        [HttpPut]
+        [Route("member/return/{memberId}")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BorrowTransaction))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> ReturnBook(string memberId, [FromBody] Book book, CancellationToken cancellationToken = new CancellationToken())
+        {
+            if (string.IsNullOrEmpty(memberId))
+            {
+                return BadRequest("member Id is null.");
+            }
+
+            if(book == null)
+            {
+                return BadRequest("Book is null");
+            }
+
+            //get the transaction ID,
+            //update the Isavaliavle of the Book entity, 
+            //update book ReturnDate of the transaction entity
+            var transaction = await _transactionRepository.ReturnBook(memberId, book, cancellationToken);
+            return Ok(transaction);
+        }
+    }
+
+
+}

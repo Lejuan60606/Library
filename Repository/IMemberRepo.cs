@@ -1,13 +1,13 @@
-﻿using LibraryApp.Repository.DataModel;
+﻿using Repository.DataModel;
 
-namespace LibraryApp.Repository
+namespace Repository
 {
     public interface IMemberRepo
     {
-        Task<IList<Member>> GetAll();
-        Task<Member> GetById(string id);
-        Task<bool> Add(Member member);
-        Task<bool> Update(Member member);
-        Task<bool> Delete(string id);
+        Task<List<Member>> GetAll(CancellationToken cancellationToken);
+        Task<Member> GetById(string id, CancellationToken cancellationToken);
+        Task Add(Member member, CancellationToken cancellationToken);
+        Task Update(string id, Member member, CancellationToken cancellationToken);
+        Task Delete(Member member, CancellationToken cancellationToken);
     }
 }
