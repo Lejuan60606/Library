@@ -98,7 +98,7 @@ namespace Services.Controllers
                 }
 
                 await _repo.Update(id, book, cancellationToken);
-                return NoContent();
+                return Ok();
 
             }
             catch (Exception ex)

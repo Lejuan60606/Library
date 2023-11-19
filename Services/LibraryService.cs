@@ -27,6 +27,8 @@ namespace Services
                 });
 
                 builder.Services.AddScoped<IBookRepo, BookRepo>();
+                builder.Services.AddScoped<IMemberRepo, MemberRepo>();
+                builder.Services.AddScoped<IBorrowTransactionRepo, BorrowTransactionRepo>();
                 builder.Services.AddScoped(_ => new LibraryContext(connectionString));
                 builder.Services.AddDbContext<LibraryContext>(options => options.UseSqlServer(connectionString),ServiceLifetime.Scoped); 
 

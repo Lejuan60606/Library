@@ -29,6 +29,7 @@ namespace Repository
 
             modelBuilder.Entity<Book>(entity =>
             {
+               // entity.Property(ent => ent.IsAvailable).HasColumnType("bit");
                 entity.HasKey(d => new { d.Id });
             });
 

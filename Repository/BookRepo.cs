@@ -26,7 +26,9 @@ namespace Repository
 
         public async Task<List<Book>> GetAll(CancellationToken cancellationToken)
         {
-            return await _dbContext.Books.ToListAsync(cancellationToken);
+            List<Book> bookList = await _dbContext.Books.ToListAsync(cancellationToken);
+
+            return bookList;
         }
 
         public async Task<Book> GetById(string id, CancellationToken cancellationToken)
