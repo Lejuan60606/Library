@@ -49,17 +49,9 @@ namespace Services.Controllers
             if(string.IsNullOrEmpty(memberId))
             {
                 return BadRequest("Transaction data is null.");
-            }
-
-            Guid newId = Guid.NewGuid();
-            string uniqueIdString = newId.ToString();
-            BorrowTransaction transaction = new BorrowTransaction() { 
-                Id = uniqueIdString,
-                BookID = book.Id,
-                MemberID = memberId,
-                BorrowDate = DateTime.UtcNow
-            };
-            await _transactionRepository.BorrowBook(memberId, book, cancellationToken); //update book IsAvaliable status
+            }          
+            
+            var transaction =  await _transactionRepository.BorrowBook(memberId, book, cancellationToken); 
             return CreatedAtAction(nameof(GetByMemberId), new { memberId = transaction.MemberID }, transaction);
         }
 
@@ -81,8 +73,10 @@ namespace Services.Controllers
                 return BadRequest("Book is null");
             }
 
-            //get the transaction ID, update the ReturnDate,update book Isavaliavle
-           var transaction = await _transactionRepository.ReturnBook(memberId, book, cancellationToken);
+            //get the transaction ID,
+            //update the Isavaliavle of the Book entity, 
+            //update book ReturnDate of the transaction entity
+            var transaction = await _transactionRepository.ReturnBook(memberId, book, cancellationToken);
             return Ok(transaction);
         }
     }

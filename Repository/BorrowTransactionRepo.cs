@@ -19,9 +19,28 @@ namespace Repository
         //    await _dbContext.SaveChangesAsync(cancellationToken);
         //}
 
-        public Task BorrowBook(string memberId, Book book, CancellationToken cancellationToken)
+        public async Task<BorrowTransaction> BorrowBook(string memberId, Book book, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var transaction = new BorrowTransaction
+            {
+                Id = Guid.NewGuid().ToString(),
+                BookID = book.Id,
+                MemberID = memberId,
+                BorrowDate = DateTime.UtcNow
+            };
+
+            _dbContext.BorrowTransactions.Add(transaction);
+
+            // Update the availability of the book, if needed
+            var bookToUpdate = await _dbContext.Books.FirstOrDefaultAsync(b => b.Id == book.Id, cancellationToken);
+            if (bookToUpdate != null)
+            {
+                bookToUpdate.IsAvailable = false;
+                _dbContext.Books.Update(bookToUpdate);
+            }
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return transaction;
         }
 
         //public async Task Delete(BorrowTransaction BorrowTransaction, CancellationToken cancellationToken)
@@ -40,15 +59,36 @@ namespace Repository
         //    return await _dbContext.BorrowTransactions.FirstOrDefaultAsync(b => b.Id == id, cancellationToken: cancellationToken);
         //}
 
-        public Task<List<BorrowTransaction>> GetByMemberId(string memberId, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
+        public async Task<List<BorrowTransaction>> GetByMemberId(string memberId, CancellationToken cancellationToken)
+        {         
+            return await _dbContext.BorrowTransactions
+                         .Where(t => t.MemberID == memberId)
+                         .ToListAsync(cancellationToken);
         }
      
 
-        Task<BorrowTransaction> IBorrowTransactionRepo.ReturnBook(string memberId, Book book, CancellationToken cancellationToken)
+        public async Task<BorrowTransaction> ReturnBook(string memberId, Book book, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var transaction = await _dbContext.BorrowTransactions
+                                   .FirstOrDefaultAsync(t => t.MemberID == memberId && t.BookID == book.Id && t.ReturnDate == null, cancellationToken);
+
+            if (transaction != null)
+            {
+                transaction.ReturnDate = DateTime.UtcNow;
+                _dbContext.BorrowTransactions.Update(transaction);
+
+                // Update the availability of the book
+                var bookToUpdate = await _dbContext.Books.FirstOrDefaultAsync(b => b.Id == book.Id, cancellationToken);
+                if (bookToUpdate != null)
+                {
+                    bookToUpdate.IsAvailable = true;
+                    _dbContext.Books.Update(bookToUpdate);
+                }
+
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+
+            return transaction;
         }
 
         //public async Task Update(string id, BorrowTransaction borrowTransaction, CancellationToken cancellationToken)
